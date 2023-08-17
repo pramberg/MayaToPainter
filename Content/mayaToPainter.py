@@ -1,7 +1,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2018 Viktor Pramberg <hi@viktorpramberg.com>
+Copyright (c) 2023 Viktor Pramberg <hi@viktorpramberg.com>
 """
 
 import os
@@ -15,7 +15,7 @@ import pymel.core as pm
 import maya.OpenMayaMPx as OpenMayaMPx
 
 cmdName = 'mayaToPainter'
-version = "1.0.0"
+version = "1.1.0"
 
 # ---------------------------------------------------------------------- #
 # Create environment variables for everything if they don't already exist.
@@ -27,8 +27,7 @@ if "mayaToPainterExportDirectory" not in pm.env.optionVars:
     pm.optionVar["mayaToPainterExportDirectory"] = os.path.join(
         tempfile.gettempdir(), "mayaToPainter")
 
-defaultPainterPath = ("C:\Program Files\Allegorithmic\\"
-                      "Substance Painter\substance painter.exe")
+defaultPainterPath = R"C:\Program Files\Adobe\Adobe Substance 3D Painter\Adobe Substance 3D Painter.exe"
 
 # Get the path to the Substance Painter executable.
 if ("mayaToPainterSPDirectory" not in pm.env.optionVars and
@@ -147,18 +146,14 @@ def exportMutliple(aSelection):
 # THANK YOU to "ewerybody" on StackOverflow for this function that checks
 # if a process exists!
 # Link: https://stackoverflow.com/a/29275361
-def processExists(aProcessname):
-    tlcall = 'TASKLIST', '/FI', 'imagename eq %s' % aProcessname
-    # shell=True hides the shell window, stdout to PIPE enables
-    # communicate() to get the tasklist command result
-    tlproc = subprocess.Popen(tlcall, shell=True, stdout=subprocess.PIPE)
-    # trimming it to the actual lines with information
-    tlout = tlproc.communicate()[0].strip().split('\r\n')
-    # if TASKLIST returns single line without processname: it's not running
-    if len(tlout) > 1 and aProcessname in tlout[-1]:
-        return True
-    else:
-        return False
+def processExists(process_name):
+    call = 'TASKLIST', '/FI', 'imagename eq %s' % process_name
+    # use buildin check_output right away
+    output = subprocess.check_output(call).decode()
+    # check in last line for process name
+    last_line = output.strip().split('\r\n')[-1]
+    # because Fail message could be translated
+    return last_line.lower().startswith(process_name.lower())
 
 
 # Verify that the path to Substance Painter is valid. Is run before every
@@ -168,20 +163,11 @@ def verifyPaths():
     if not os.path.isdir(pm.optionVar["mayaToPainterExportDirectory"]):
         pm.error(pm.optionVar["mayaToPainterExportDirectory"] +
                  ' is not a path.')
-    if ("substance painter.exe" not in spDir or
-            "Substance Painter.exe" not in spDir):
-        painterExe = False
-    else:
-        painterExe = True
 
     if not os.path.isfile(spDir):
         pm.error('Substance Painter executable not found: ' + spDir +
                  (' is not a file. You need to change path '
                   'inside the option-box.'))
-    elif os.path.isfile(spDir) and painterExe:
-        pm.error('Substance Painter executable not found: ' + spDir +
-                 (' is not a Substance Painter executable.'
-                  'You need to change path inside the option-box.'))
 
 
 # Main export function that determines what type of selection the user has
@@ -321,7 +307,8 @@ def sendToPainter():
     # the user expects the plugin to start baking.
     updateAutoBakeJSON()
 
-    if processExists('Substance Painter.exe') and shouldUpdateMesh:
+    spExeName = os.path.basename(pm.optionVar["mayaToPainterSPDirectory"])
+    if processExists(spExeName) and shouldUpdateMesh:
         print('Meshes updated!')
         return
 
@@ -524,13 +511,6 @@ def updatePainterPath():
         pm.error('Substance Painter executable not found: ' + painterDir +
                  (' is not a file. You need to change path '
                   'inside the option-box.'))
-    elif (os.path.isfile(painterDir) and
-            "substance painter.exe" not in painterDir):
-        pm.error('Substance Painter executable not found: ' + painterDir +
-                 (' is not a Substance Painter executable. '
-                  'You need to change path inside the option-box.'))
-    else:
-        print('Substance Painter executable found!')
 
 
 def updateSplitByUDIMs():
@@ -631,41 +611,37 @@ def updateYResolution(aMenuItem):
         json.dump(obj, shouldBakeJSON)
 
 
-def createResolutionDropdown(aLayout):
-    horz = pm.horizontalLayout(ratios=[1], parent=aLayout)
-    pm.text("ResolutionLabel", label="Resolution", parent=horz,
-            al="left", fn="smallPlainLabelFont")
-    pm.checkBox("ResolutionToggle", label="Same Width/Height", parent=horz,
-                al="left", v=pm.optionVar["mayaToPainterSameWidthHeight"],
-                cc=pm.Callback(updateSameWidthHeight))
+def createResolutionDropdown():
+    with pm.horizontalLayout(ratios=[1]):
+        pm.text("ResolutionLabel", label="Resolution",
+                al="left", fn="smallPlainLabelFont")
+        pm.checkBox("ResolutionToggle", label="Same Width/Height",
+                    al="left", v=pm.optionVar["mayaToPainterSameWidthHeight"],
+                    cc=pm.Callback(updateSameWidthHeight))
 
-    horz2 = pm.horizontalLayout(ratios=[1], parent=aLayout)
-    pm.optionMenu("XResolution", cc=updateXResolution, parent=horz2)
-    pm.menuItem(label='32')
-    pm.menuItem(label='64')
-    pm.menuItem(label='128')
-    pm.menuItem(label='256')
-    pm.menuItem(label='512')
-    pm.menuItem(label='1024')
-    pm.menuItem(label='2048')
-    pm.menuItem(label='4096')
-    pm.menuItem(label='8192')
+    with pm.horizontalLayout(ratios=[1]):
+        pm.optionMenu("XResolution", cc=updateXResolution)
+        pm.menuItem(label='32')
+        pm.menuItem(label='64')
+        pm.menuItem(label='128')
+        pm.menuItem(label='256')
+        pm.menuItem(label='512')
+        pm.menuItem(label='1024')
+        pm.menuItem(label='2048')
+        pm.menuItem(label='4096')
+        pm.menuItem(label='8192')
 
-    pm.optionMenu("YResolution",
-                  cc=updateYResolution,
-                  parent=horz2,
-                  en=not pm.optionVar["mayaToPainterSameWidthHeight"])
-    pm.menuItem(label='32')
-    pm.menuItem(label='64')
-    pm.menuItem(label='128')
-    pm.menuItem(label='256')
-    pm.menuItem(label='512')
-    pm.menuItem(label='1024')
-    pm.menuItem(label='2048')
-    pm.menuItem(label='4096')
-    pm.menuItem(label='8192')
-    horz.redistribute()
-    horz2.redistribute()
+        pm.optionMenu("YResolution", cc=updateYResolution,
+                      en=not pm.optionVar["mayaToPainterSameWidthHeight"])
+        pm.menuItem(label='32')
+        pm.menuItem(label='64')
+        pm.menuItem(label='128')
+        pm.menuItem(label='256')
+        pm.menuItem(label='512')
+        pm.menuItem(label='1024')
+        pm.menuItem(label='2048')
+        pm.menuItem(label='4096')
+        pm.menuItem(label='8192')
 
 
 def updateOptionsFromJSON():
@@ -687,7 +663,7 @@ def updateOptionsFromJSON():
     if shouldReset:
         with open(jsonFile, 'w') as shouldBakeJSON:
             newJson = {"Antialiasing": "None",
-                       "Output_Size": [7, 11],
+                       "Output_Size": [7, 7],
                        "Match": "Always",
                        "Average_Normals": True}
             json.dump(newJson, shouldBakeJSON)
@@ -707,250 +683,182 @@ def updateSameWidthHeight():
 
 # Create options window.
 def openOptions():
-    window = pm.window(title="Maya To Painter Options",
-                       w=330,
-                       h=380,
-                       cc=pm.Callback(verifyPaths))
+    with pm.window(title="Maya To Painter Options", w=330, h=380, cc=pm.Callback(verifyPaths)) as win:
+        with pm.tabLayout() as tabLayout:
+            ratios = [
+                1, 0.25, 1,
+                0.25, 1, 1,
+                0.5, 0.5, 1,
+                1, 1, 0.5,
+                1, 1, 1.0,
+                0.5, 0.5, 2
+            ]
+            with pm.verticalLayout(ratios=ratios, spacing=15) as generalLayout:
 
-    tabLayout = pm.tabLayout()
+                # ###################
+                # Export path general
+                # ###################
 
-    ratios = [
-        1, 0.25, 1,
-        0.25, 1, 1,
-        0.5, 0.5, 1,
-        1, 1, 0.5,
-        1, 1, 1.0,
-        0.5, 0.5, 2
-    ]
-    layout = pm.verticalLayout("General Settings",
-                               ratios=ratios,
-                               spacing=15,
-                               parent=tabLayout)
+                pm.text(label="Export path",
+                        al="left",
+                        fn="smallPlainLabelFont")
 
-    ratios = [
-        1, 0.25, 1,
-        0.25, 1, 1,
-        0.5, 0.5, 1,
-        1, 1, 0.5,
-        1, 1, 1.0,
-        0.5, 0.5, 2
-    ]
-    pathLayout = pm.verticalLayout('Advanced Settings',
-                                   ratios=ratios,
-                                   spacing=15,
-                                   parent=tabLayout)
+                pm.textField("exportPath1",
+                             pht='Select export path',
+                             tx=pm.optionVar["mayaToPainterExportDirectory"],
+                             en=True,
+                             ip=0,
+                             cc=pm.Callback(updateExportPath, 1))
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.button(label="Change Path",
+                              en=True,
+                              command=pm.Callback(changeExportPath))
+                    pm.button(label="Reset export path",
+                              command=pm.Callback(resetExportPath))
 
-    # ###################
-    # Export path general
-    # ###################
+                pm.separator()
 
-    pm.text("exportPathTitle1",
-            label="Export path",
-            parent=layout,
-            al="left",
-            fn="smallPlainLabelFont")
-    pm.textField("exportPath1",
-                 pht='Select export path',
-                 tx=pm.optionVar["mayaToPainterExportDirectory"],
-                 parent=layout,
-                 en=True,
-                 ip=0,
-                 cc=pm.Callback(updateExportPath, 1))
-    pathHorzLayout = pm.horizontalLayout(ratios=[1],
-                                         parent=layout)
-    pm.button("exportPathBtn1",
-              label="Change Path",
-              parent=pathHorzLayout,
-              en=True,
-              command=pm.Callback(changeExportPath))
-    pm.button("resetExportPath1",
-              label="Reset export path",
-              parent=pathHorzLayout,
-              command=pm.Callback(resetExportPath))
-    pathHorzLayout.redistribute()
-    pm.separator(parent=layout)
+                # ######
+                # Baking
+                # ######
 
-    # ######
-    # Baking
-    # ######
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.text(label="Auto Bake",
+                            al="left",
+                            fn="smallPlainLabelFont")
+                    pm.checkBox("AutoBakeToggle",
+                                label="Auto Bake",
+                                al="left",
+                                v=pm.optionVar["mayaToPainterShouldBake"],
+                                cc=pm.Callback(updateAutoBake))
 
-    bakeHorzLayout = pm.horizontalLayout(ratios=[1],
-                                         parent=layout)
-    pm.text("AutoBakeTitle",
-            label="Auto Bake",
-            parent=bakeHorzLayout,
-            al="left",
-            fn="smallPlainLabelFont")
-    pm.checkBox("AutoBakeToggle",
-                label="Auto Bake",
-                parent=bakeHorzLayout,
-                al="left",
-                v=pm.optionVar["mayaToPainterShouldBake"],
-                cc=pm.Callback(updateAutoBake))
-    bakeHorzLayout.redistribute()
+                pm.separator()
 
-    pm.separator("AutoBakeSeparator",  parent=layout)
+                createResolutionDropdown()
 
-    # ##########
-    # Resolution
-    # ##########
+                pm.separator()
 
-    createResolutionDropdown(layout)
+                # ####
+                # UDIM
+                # ####
 
-    pm.separator("ResolutionSeparator",  parent=layout)
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.text(label="UDIMs",
+                            al="left",
+                            fn="smallPlainLabelFont")
+                    pm.checkBox("UDIMToggle",
+                                label="Split by UDIM",
+                                al="left",
+                                v=pm.optionVar["mayaToPainterSplitByUDIMs"],
+                                cc=pm.Callback(updateSplitByUDIMs))
 
-    # ####
-    # UDIM
-    # ####
+                pm.separator()
 
-    udimHorzLayout = pm.horizontalLayout(ratios=[1],
-                                         parent=layout)
-    pm.text("UDIMTitle",
-            label="UDIMs",
-            parent=udimHorzLayout,
-            al="left",
-            fn="smallPlainLabelFont")
-    pm.checkBox("UDIMToggle",
-                label="Split by UDIM",
-                parent=udimHorzLayout,
-                al="left",
-                v=pm.optionVar["mayaToPainterSplitByUDIMs"],
-                cc=pm.Callback(updateSplitByUDIMs))
-    udimHorzLayout.redistribute()
-    pm.separator("UDIMSeparator",  parent=layout)
+                # ################
+                # Send to Painter!
+                # ################
 
-    # ####################
-    # Export path advanced
-    # ####################
+                pm.button(label="Send To Painter",
+                          command=pm.Callback(sendToPainterOptionsButton, win),
+                          h=50)
 
-    pm.text("exportPathTitle",
-            label="Export path",
-            parent=pathLayout,
-            al="left",
-            fn="smallPlainLabelFont")
-    pm.textField("exportPath0",
-                 pht='Select export path',
-                 tx=pm.optionVar["mayaToPainterExportDirectory"],
-                 parent=pathLayout,
-                 en=True,
-                 ip=0,
-                 cc=pm.Callback(updateExportPath, 0))
-    pathHorzLayout = pm.horizontalLayout(ratios=[1],
-                                         parent=pathLayout)
-    pm.button("exportPathBtn",
-              label="Change Path",
-              parent=pathHorzLayout,
-              en=True,
-              command=pm.Callback(changeExportPath))
-    pm.button("resetExportPath",
-              label="Reset export path",
-              parent=pathHorzLayout,
-              command=pm.Callback(resetExportPath))
-    pathHorzLayout.redistribute()
-    pm.button("exportPathExplorerBtn",
-              label="Open folder in Explorer",
-              parent=pathLayout,
-              en=True,
-              command=pm.Callback(openCurrentTempFolder))
-    pm.separator(parent=pathLayout)
+            # ####################
+            # Export path advanced
+            # ####################
+            ratios = [
+                1, 0.25, 1,
+                0.25, 1, 1,
+                0.5, 0.5, 1,
+                1, 1, 0.5,
+                1, 1, 1.0,
+                0.5, 0.5, 2
+            ]
 
-    # ############
-    # Painter path
-    # ############
+            with pm.verticalLayout(ratios=ratios, spacing=15) as advancedLayout:
+                pm.text(label="Export path",
+                        al="left",
+                        fn="smallPlainLabelFont")
 
-    pm.text("painterPathTitle",
-            label="Path to Substance Painter",
-            parent=pathLayout,
-            al="left",
-            fn="smallPlainLabelFont")
-    pm.textField("painterPath",
-                 pht='Select path to Substance Painter',
-                 tx=pm.optionVar["mayaToPainterSPDirectory"],
-                 parent=pathLayout,
-                 en=True,
-                 ip=0,
-                 cc=pm.Callback(updatePainterPath))
-    sppathHorzLayout = pm.horizontalLayout(ratios=[1],
-                                           parent=pathLayout)
-    pm.button("painterPathBtn",
-              label="Change Path",
-              parent=sppathHorzLayout,
-              en=True,
-              command=pm.Callback(changePainterPath))
-    pm.button("resetPainterPathBtn",
-              label="Reset Painter path",
-              parent=sppathHorzLayout,
-              command=pm.Callback(resetPainterPath))
-    sppathHorzLayout.redistribute()
+                pm.textField("exportPath0",
+                             pht='Select export path',
+                             tx=pm.optionVar["mayaToPainterExportDirectory"],
+                             en=True,
+                             ip=0,
+                             cc=pm.Callback(updateExportPath, 0))
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.button(label="Change Path",
+                              en=True,
+                              command=pm.Callback(changeExportPath))
+                    pm.button(label="Reset export path",
+                              command=pm.Callback(resetExportPath))
 
-    pm.separator(parent=pathLayout)
+                pm.button(label="Open folder in Explorer",
+                          en=True,
+                          command=pm.Callback(openCurrentTempFolder))
+                pm.separator()
 
-    # #######
-    # Cleanup
-    # #######
+                # ############
+                # Painter path
+                # ############
 
-    pm.text("cleanupTitle",
-            label="Cleanup exported files (and assbins)",
-            parent=pathLayout,
-            al="left",
-            fn="smallPlainLabelFont")
+                pm.text(label="Path to Substance Painter",
+                        al="left",
+                        fn="smallPlainLabelFont")
+                pm.textField("painterPath",
+                             pht='Select path to Substance Painter',
+                             tx=pm.optionVar["mayaToPainterSPDirectory"],
+                             en=True,
+                             ip=0,
+                             cc=pm.Callback(updatePainterPath))
 
-    cleanupHorzLayout1 = pm.horizontalLayout(ratios=[1],
-                                             parent=pathLayout)
-    cleanupHorzLayout2 = pm.horizontalLayout(ratios=[1],
-                                             parent=pathLayout)
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.button(label="Change Path",
+                              en=True,
+                              command=pm.Callback(changePainterPath))
+                    pm.button(label="Reset Painter path",
+                              command=pm.Callback(resetPainterPath))
 
-    pm.button("cleanupAllBtn",
-              label="Remove all",
-              parent=cleanupHorzLayout1,
-              command=pm.Callback(removeAllTempFiles))
-    pm.button("cleanupAllExceptBtn",
-              label="Remove all except high/low",
-              parent=cleanupHorzLayout1,
-              command=pm.Callback(removeNotLowHighTempFiles))
+                pm.separator()
 
-    pm.button("cleanupLowBtn",
-              label="Remove low",
-              parent=cleanupHorzLayout2,
-              command=pm.Callback(removeLowTempFiles))
-    pm.button("cleanupHighBtn",
-              label="Remove high",
-              parent=cleanupHorzLayout2,
-              command=pm.Callback(removeHighTempFiles))
+                # #######
+                # Cleanup
+                # #######
 
-    cleanupHorzLayout1.redistribute()
-    cleanupHorzLayout2.redistribute()
+                pm.text(label="Cleanup exported files (and assbins)",
+                        al="left",
+                        fn="smallPlainLabelFont")
 
-    # ################
-    # Send to Painter!
-    # ################
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.button(label="Remove all",
+                              command=pm.Callback(removeAllTempFiles))
+                    pm.button(label="Remove all except high/low",
+                              command=pm.Callback(removeNotLowHighTempFiles))
 
-    pm.button("SendToPainterBtn",
-              label="Send To Painter",
-              parent=layout,
-              command=pm.Callback(sendToPainterOptionsButton, window),
-              h=50)
+                with pm.horizontalLayout(ratios=[1]):
+                    pm.button(label="Remove low",
+                              command=pm.Callback(removeLowTempFiles))
+                    pm.button(label="Remove high",
+                              command=pm.Callback(removeHighTempFiles))
 
-    layout.redistribute()
-    pathLayout.redistribute()
-    updateOptionsFromJSON()
-    window.show()
+            pm.tabLayout(
+                tabLayout, e=True,
+                tabLabel=((generalLayout, "General Settings"),
+                          (advancedLayout, "Advanced Settings")))
+
+        updateOptionsFromJSON()
 
 
 # Do plugin stuff... This is for the main button.
 class MayaToPainter(OpenMayaMPx.MPxCommand):
 
     def __init__(self):
-        ''' Constructor. '''
         OpenMayaMPx.MPxCommand.__init__(self)
 
     def doIt(self, args):
-        ''' Do stuff '''
         sendToPainter()
 
     @staticmethod
     def cmdCreator():
-        ''' Create an instance of our command. '''
         return OpenMayaMPx.asMPxPtr(MayaToPainter())
 
 
@@ -958,16 +866,13 @@ class MayaToPainter(OpenMayaMPx.MPxCommand):
 class MayaToPainterOptions(OpenMayaMPx.MPxCommand):
 
     def __init__(self):
-        ''' Constructor. '''
         OpenMayaMPx.MPxCommand.__init__(self)
 
     def doIt(self, args):
-        ''' Do stuff '''
         openOptions()
 
     @staticmethod
     def cmdCreator():
-        ''' Create an instance of our command. '''
         return OpenMayaMPx.asMPxPtr(MayaToPainterOptions())
 
 

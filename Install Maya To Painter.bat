@@ -40,7 +40,7 @@ CLS
 goto continue
 
 :continue
-robocopy ".\Content\maya-to-painter" "%TARGET%\Allegorithmic\Substance Painter\plugins\maya-to-painter" /E
+robocopy ".\Content\maya-to-painter" "%TARGET%\Adobe\Adobe Substance 3D Painter\plugins\maya-to-painter" /E
 CLS
 echo Installation complete: Maya To Painter successfully installed.
 pause

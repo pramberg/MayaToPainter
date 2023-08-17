@@ -27,8 +27,8 @@ del %TARGET%\maya\%VERSION%\prefs\icons\mayaToPainter.png
 goto continue
 
 :continue
-del "%TARGET%\Allegorithmic\Substance Painter\plugins\maya-to-painter" /Q
-RD "%TARGET%\Allegorithmic\Substance Painter\plugins\maya-to-painter" /Q
+del "%TARGET%\Adobe\Adobe Substance 3D Painter\plugins\maya-to-painter" /Q
+RD "%TARGET%\Adobe\Adobe Substance 3D Painter\plugins\maya-to-painter" /Q
 CLS
 echo Uninstall complete: Maya To Painter successfully uninstalled.
 pause

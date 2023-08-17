@@ -40,7 +40,7 @@ Otherwise, you can follow these steps:
     - The plugin checks if there is a process called `Substance Painter.exe` running, and if there already is an object with the same export name in the export path. If both are true, it will update the mesh(es) instead of starting a new instance of Painter. To update your mesh in Painter, go to `Edit` → `Project Configuration` → `Select`. In the prompt, just press `Open` immediately, you don't need to select the mesh. Then press "OK".
     Highpoly meshes will auto-update, so all you need to do is press bake again.
 
-### Intended use:
+### Intended use
 Create "objectName_high" and "objectName_low" groups, and put all sub-objects in those folders. When you are ready to export, select the both groups and press export. If you named your meshes inside the groups correctly, you will be able to bake in Painter using `By mesh name`. When you have a project set up, you will easily be able to iterate by sending the group(s) to Painter again.
 
 ### Settings
@@ -58,7 +58,8 @@ You can choose four different options:
 * If all selected objects only have lambert1 shader, the plugin will create a new material during export to give you a nicer texture set name in Painter.
 * If it detects ANY other shader, it will not do anything, and keep everything as it is in Maya.
 
-## Known bugs:
+## Known bugs
 * You can't exit Maya properly if an instance of Painter is running that was started from this plugin.
-* Recent Maya versions aren't supported.
-* This version is incompatible with recent versions of Substance Painter (since Adobe took over).
+
+## Disclaimer
+This plugin was written a long time ago, and I don't consider any of it to be of particularly good quality. But since I no longer have access to Maya or any recent version of Substance Painter, I can't verify any changes made to this plugin. That's why the code is mostly as it was back then, with a few fixes here and there to keep it alive. With that said, if there is anyone out there with access to these programs who wish to continue this project, I welcome any support.
