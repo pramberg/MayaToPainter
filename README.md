@@ -3,6 +3,9 @@ A plugin that vastly improves the experience of using Maya and Substance Painter
 Check out the option-box for cleaning up the temp-folder, and changing directories.
 Currently, it doesn't have support for UDIMs, but if there is demand, it can be added.
 
+## Download
+Navigate to [the latest release](https://github.com/pramberg/MayaToPainter/releases/latest) and download the `Source Code (zip)`. Unzip it, and follow the installation below.
+
 ## Installation
 If you have a normal installation of both Maya and Painter, AND you trust this project's batch files, you can use the installer to quickly place everything where it should go. Then you just need to load the plugin in Maya's plugin manager.
 
