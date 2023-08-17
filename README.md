@@ -13,7 +13,7 @@ Otherwise, you can follow these steps:
 * Go to the `Content` folder.
 * Place the `mayaToPainter.py` file in `Documents/maya/plug-ins` folder. If that folder isn't there, create it.
 * If you want an item in the mesh context marking menu, also add the `scripts` folder to `Documents/maya` and add `prefs` to `Documents/maya/20##`.
-* Place the `maya-to-painter` folder in `Documents/Adobe/Adobe Substance 3D Painter/plugins`. See [this document](https://helpx.adobe.com/substance-3d-painter/scripting-and-development/scripts-and-plugins/creating-a-javascript-plugin.html) for more details on what path to use for platforms other than Windows.
+* Place the `maya-to-painter` folder in `Documents/Adobe/Adobe Substance 3D Painter/plugins`. See [this document](https://helpx.adobe.com/substance-3d-painter/scripting-and-development/scripts-and-plugins/creating-a-javascript-plugin.html) for more details on what path to use depending on platform and version.
 * In Maya, go to `Windows` → `Settings/Preferences` → `Plug-in Manager`
 * Check the *Loaded* and *Auto load* checkboxes for `mayaToPainter.py`
 * You should now have a new menu button under Maya's `Mesh` menu called `Send To Painter`. 
