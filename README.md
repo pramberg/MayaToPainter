@@ -13,7 +13,7 @@ Otherwise, you can follow these steps:
 * Go to the `Content` folder.
 * Place the `mayaToPainter.py` file in `Documents/maya/plug-ins` folder. If that folder isn't there, create it.
 * If you want an item in the mesh context marking menu, also add the `scripts` folder to `Documents/maya` and add `prefs` to `Documents/maya/20##`.
-* Place the `maya-to-painter` folder in `Documents/Allegorithmic/Substance Painter/plugins`
+* Place the `maya-to-painter` folder in `Documents/Adobe/Adobe Substance 3D Painter/plugins`
 * In Maya, go to `Windows` → `Settings/Preferences` → `Plug-in Manager`
 * Check the *Loaded* and *Auto load* checkboxes for `mayaToPainter.py`
 * You should now have a new menu button under Maya's `Mesh` menu called `Send To Painter`. 
@@ -26,7 +26,7 @@ Otherwise, you can follow these steps:
 * Options for user set export path, Painter path and cleanup tools.
 * Optional addition: new item in context sensitive marking menu.
 * For full functionality, install the Substance Painter part of the plugin.
-    - Add the `maya-to-painter` folder to `Documents/Allegorithmic/Substance Painter/plugins`
+    - Add the `maya-to-painter` folder to `Documents/Adobe/Adobe Substance 3D Painter/plugins`
     - Doing this will allow Painter to automatically add a highpoly you export using this plugin to the baking parameters.
 
 ## How to use
