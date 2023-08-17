@@ -1,0 +1,72 @@
+// ===========================================================================
+// Copyright 2017 Autodesk, Inc. All rights reserved.
+//
+// Use of this software is subject to the terms of the Autodesk license
+// agreement provided at the time of installation or download, or which
+// otherwise accompanies this software in either electronic or hard copy form.
+// ===========================================================================
+displayString -replace -value "Append to Polygon Tool" m_contextPolyToolsObjectMM.kAppendToPolygonTool;
+displayString -replace -value "Append to Polygon Tool Options" m_contextPolyToolsObjectMM.kAppendToPolygonToolOptions;
+displayString -replace -value "Booleans" m_contextPolyToolsObjectMM.kBooleans;
+displayString -replace -value "Cleanup..." m_contextPolyToolsObjectMM.kCleanup;
+displayString -replace -value "Combine" m_contextPolyToolsObjectMM.kCombine;
+displayString -replace -value "Connect Tool Options" m_contextPolyToolsObjectMM.kConnectToolOptions;
+displayString -replace -value "Crease Tool" m_contextPolyToolsObjectMM.kCreaseTool;
+displayString -replace -value "Crease Tool Options" m_contextPolyToolsObjectMM.kCreaseToolOptions;
+displayString -replace -value "Difference" m_contextPolyToolsObjectMM.kDifference;
+displayString -replace -value "Difference Options" m_contextPolyToolsObjectMM.kDifferenceOps;
+displayString -replace -value "Extrude" m_contextPolyToolsObjectMM.kExtrude;
+displayString -replace -value "Fill Holes" m_contextPolyToolsObjectMM.kFillHoles;
+displayString -replace -value "Harden Edge" m_contextPolyToolsObjectMM.kHardenEdge;
+displayString -replace -value "Insert Edge Loop Tool" m_contextPolyToolsObjectMM.kInsertEdgeLoopTool;
+displayString -replace -value "Insert Edge Loop Tool Options" m_contextPolyToolsObjectMM.kInsertEdgeLoopToolOptions;
+displayString -replace -value "Intersection" m_contextPolyToolsObjectMM.kIntersection;
+displayString -replace -value "Intersection Options" m_contextPolyToolsObjectMM.kIntersectionOps;
+displayString -replace -value "Connect Tool" m_contextPolyToolsObjectMM.kMTKConnectTool;
+displayString -replace -value "Enter Connect tool" m_contextPolyToolsObjectMM.kMTKConnectToolAnn;
+displayString -replace -value "Quad Draw Tool" m_contextPolyToolsObjectMM.kMTKQuadDrawTool;
+displayString -replace -value "Enter Quad Draw tool" m_contextPolyToolsObjectMM.kMTKQuadDrawToolAnn;
+displayString -replace -value "Mirror" m_contextPolyToolsObjectMM.kMirrorPolygon;
+displayString -replace -value "Multi-Cut Tool Options" m_contextPolyToolsObjectMM.kMultiCutToolOptions;
+displayString -replace -value "Offset Edge Loop" m_contextPolyToolsObjectMM.kOffsetEdgeLoop;
+displayString -replace -value "Offset Edge Loop: " m_contextPolyToolsObjectMM.kOffsetEdgeLoopAnnot;
+displayString -replace -value "Offset Edge Loop Options" m_contextPolyToolsObjectMM.kOffsetEdgeLoopOptions;
+displayString -replace -value "Offset Edge Loop Tool" m_contextPolyToolsObjectMM.kOffsetEdgeLoopTool;
+displayString -replace -value "Offset Edge Loop Tool: " m_contextPolyToolsObjectMM.kOffsetEdgeLoopToolAnnot;
+displayString -replace -value "Offset Edge Loop Tool Options" m_contextPolyToolsObjectMM.kOffsetEdgeLoopToolOptions;
+displayString -replace -value "Target Weld Tool" m_contextPolyToolsObjectMM.kPolyBuildMergeVertTool;
+displayString -replace -value "Polygon Display" m_contextPolyToolsObjectMM.kPolygonDisplay;
+displayString -replace -value "Project Curve on mesh" m_contextPolyToolsObjectMM.kProjectCurveOnMesh;
+displayString -replace -value "Quad Draw Tool Options" m_contextPolyToolsObjectMM.kQuadDrawToolOptions;
+displayString -replace -value "Quadrangulate" m_contextPolyToolsObjectMM.kQuadrangulate;
+displayString -replace -value "Quadrangulate Options" m_contextPolyToolsObjectMM.kQuadrangulateOptions;
+displayString -replace -value "Reduce" m_contextPolyToolsObjectMM.kReduce;
+displayString -replace -value "Reduce Options" m_contextPolyToolsObjectMM.kReduceOptions;
+displayString -replace -value "Reset Polygon Display" m_contextPolyToolsObjectMM.kResetPolygonDisplay;
+displayString -replace -value "Sculpt Tool" m_contextPolyToolsObjectMM.kSculptTool;
+displayString -replace -value "Sculpt Tool Options" m_contextPolyToolsObjectMM.kSculptToolOptions;
+displayString -replace -value "Separate" m_contextPolyToolsObjectMM.kSeparate;
+displayString -replace -value "Smooth" m_contextPolyToolsObjectMM.kSmooth;
+displayString -replace -value "Smooth Options" m_contextPolyToolsObjectMM.kSmoothOptions;
+displayString -replace -value "Soften Edge" m_contextPolyToolsObjectMM.kSoftenEdge;
+displayString -replace -value "Soften/Harden" m_contextPolyToolsObjectMM.kSoftenHarden;
+displayString -replace -value "Soften/Harden Edges" m_contextPolyToolsObjectMM.kSoftenHardenEdge;
+displayString -replace -value "Soften/Harden Options" m_contextPolyToolsObjectMM.kSoftenHardenOptions;
+displayString -replace -value "Split mesh with projected curve" m_contextPolyToolsObjectMM.kSplitMeshWithProjectedCurve;
+displayString -replace -value "Subdiv Proxy" m_contextPolyToolsObjectMM.kSubdivProxy;
+displayString -replace -value "Subdiv Proxy Options" m_contextPolyToolsObjectMM.kSubdivProxyOptions;
+displayString -replace -value "Toggle Backface Culling" m_contextPolyToolsObjectMM.kToggleBackfaceCulling;
+displayString -replace -value "Toggle Border Edges" m_contextPolyToolsObjectMM.kToggleBorderEdges;
+displayString -replace -value "Toggle Face Centers" m_contextPolyToolsObjectMM.kToggleFaceCenters;
+displayString -replace -value "Toggle Face Normals" m_contextPolyToolsObjectMM.kToggleFaceNormals;
+displayString -replace -value "Toggle Hidden Triangles" m_contextPolyToolsObjectMM.kToggleHiddenTriangles;
+displayString -replace -value "Toggle Soft Edge Display" m_contextPolyToolsObjectMM.kToggleSoftEdgeDisplay;
+displayString -replace -value "Toggle Texture Border Edges" m_contextPolyToolsObjectMM.kToggleTextureBorderEdges;
+displayString -replace -value "Toggle Vertex Normals" m_contextPolyToolsObjectMM.kToggleVertexNormals;
+displayString -replace -value "Toggle Vertices" m_contextPolyToolsObjectMM.kToggleVertices;
+displayString -replace -value "Transfer Vertex Order" m_contextPolyToolsObjectMM.kTransferVertexOrder;
+displayString -replace -value "Triangulate" m_contextPolyToolsObjectMM.kTriangulate;
+displayString -replace -value "Union" m_contextPolyToolsObjectMM.kUnion;
+displayString -replace -value "Union Options" m_contextPolyToolsObjectMM.kUnionOps;
+displayString -replace -value "Send To Painter" m_contextPolyToolsObjectMM.kSendToPainter;
+displayString -replace -value "Send To Painter Options" m_contextPolyToolsObjectMM.kSendToPainterOptions;

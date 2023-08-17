@@ -1,0 +1,593 @@
+// ===========================================================================
+// Copyright 2017 Autodesk, Inc. All rights reserved.
+//
+// Use of this software is subject to the terms of the Autodesk license
+// agreement provided at the time of installation or download, or which
+// otherwise accompanies this software in either electronic or hard copy form.
+// ===========================================================================
+//
+//  Procedure Name:
+//      contextPolyToolsObjectMM
+//
+//  Description:
+//      This procedure creates the popup/marking menu
+//      for poly object tools. See ModelEdMenu.
+//
+//  Input Arguments:
+//      None
+//
+//  Return Value:
+//      None.
+
+
+global proc contextPolyToolsObjectMM(){
+	int $mtkEnable = `pluginInfo -q -loaded "modelingToolkit"`;
+
+	menuItem 
+		-label (uiRes("m_contextPolyToolsObjectMM.kExtrude"))
+		-command "performPolyExtrude 0" 
+		-radialPosition "S" 
+		-enableCommandRepeat 1 
+		-image "polyExtrudeFacet.png" 
+		; 	
+	
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kInsertEdgeLoopTool"))
+		-annotation (getRunTimeCommandAnnotation("SplitEdgeRingTool"))
+		-image "polySplitEdgeRing.png"
+		-command "SplitEdgeRingTool"
+		-radialPosition "SW" 
+		;
+
+	menuItem -optionBox true
+		-label (uiRes("m_contextPolyToolsObjectMM.kInsertEdgeLoopToolOptions"))
+		-annotation (getRunTimeCommandAnnotation("SplitEdgeRingToolOptions"))
+		-image "polySplitEdgeRing.png" 
+		-command "SplitEdgeRingToolOptions" 
+		-radialPosition "SW" 
+		;
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kAppendToPolygonTool"))
+		-command "setToolTo polyAppendFacetContext ; polyAppendFacetCtx -e -pc `optionVar -q polyKeepFacetsPlanar` polyAppendFacetContext" 
+		-radialPosition "E" 
+		-enableCommandRepeat 1
+		-image "polyAppendFacet.png" 
+		;
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kAppendToPolygonToolOptions"))
+		-command "setToolTo polyAppendFacetContext ; polyAppendFacetCtx -e -pc `optionVar -q polyKeepFacetsPlanar` polyAppendFacetContext; toolPropertyWindow" 
+		-optionBox 1
+		-radialPosition "E" 
+		-enableCommandRepeat 1
+		;
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kFillHoles"))
+		-command "FillHole" 
+		-radialPosition "NE" 
+		-enableCommandRepeat 1
+		-image "polyCloseBorder.png"
+		;
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kPolyBuildMergeVertTool"))
+		-annotation (getRunTimeCommandAnnotation("MergeVertexTool"))
+		-image "weld_NEX32.png" 
+		-radialPosition "N"
+		-command "MergeVertexTool" 
+		;
+
+	menuItem -optionBox true
+		-annotation (getRunTimeCommandAnnotation("MergeVertexToolOptions"))
+		-image "weld_NEX32.png" 
+		-radialPosition "N" 
+		-command "MergeVertexToolOptions"
+		;
+
+	menuItem
+		-version "2015"
+		-label (uiRes("m_PolygonsBuildToolsMenu.kMTKMultiCutTool"))
+		-command "dR_multiCutTool"
+		-en $mtkEnable
+		-radialPosition "W" 
+		-allowOptionBoxes 1
+		-image "multiCut_NEX32.png"
+		;
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kMultiCutToolOptions"))
+		-command "dR_multiCutTool; toolPropertyWindow;" 
+		-optionBox 1
+		-radialPosition "W" 
+		-enableCommandRepeat 1
+		-enable $mtkEnable
+		;
+
+	setParent -m ..;
+
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kSculptTool"))
+		-command "SetMeshSculptTool" 
+		-radialPosition "NW" 
+		-enableCommandRepeat 1
+		-image "Sculpt.png"
+		;
+
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kSculptToolOptions"))
+		-command "ShowMeshSculptToolOptions" 
+		-optionBox 1
+		-radialPosition "NW" 
+		-enableCommandRepeat 1
+		;
+				
+	menuItem
+	    -version "2018"
+		-label (uiRes("m_contextPolyToolsObjectMM.kSoftenHardenEdge"))
+		-subMenu 1
+		-tearOff 0
+		-radialPosition "SE" 
+		-allowOptionBoxes 1
+		-postMenuCommandOnce 0
+		;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kToggleSoftEdgeDisplay"))
+				-command "int $g_cond[1]=`polyOptions -q -ae`; if ($g_cond[0]) polyOptions -se; else polyOptions -ae;" 
+				-radialPosition "S" 
+				-enableCommandRepeat 1
+				-image "commandButton.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kHardenEdge"))
+				-command "polyPerformAction \"polySoftEdge -a 0\" e 0" 
+				-radialPosition "SE" 
+				-enableCommandRepeat 1
+				-image "polyHardEdge.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSoftenHarden"))
+				-command "PolygonSoftenHarden" 
+				-radialPosition "E" 
+				-enableCommandRepeat 1
+				-image "polySoftEdge.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSoftenHardenOptions"))
+				-command "PolygonSoftenHardenOptions" 
+				-optionBox 1
+				-radialPosition "E" 
+				-enableCommandRepeat 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSoftenEdge"))
+				-command "polyPerformAction \"polySoftEdge -a 180\" e 0" 
+				-radialPosition "NE" 
+				-enableCommandRepeat 1
+				-image "polySoftEdge.png" 
+				;
+
+			setParent -menu ..;
+
+	string $duplicateEdgesLabel, $duplicateEdgesOptions, $duplicateEdgesAnnotation;
+	if( !`optionVar -exists polyDuplicateEdgeAsTool` || 
+		`optionVar -q polyDuplicateEdgeAsTool` ) {
+		$duplicateEdgesLabel = 		(uiRes("m_contextPolyToolsObjectMM.kOffsetEdgeLoopTool"));
+		$duplicateEdgesOptions = 	(uiRes("m_contextPolyToolsObjectMM.kOffsetEdgeLoopToolOptions"));
+		$duplicateEdgesAnnotation =	(uiRes("m_contextPolyToolsObjectMM.kOffsetEdgeLoopToolAnnot"));
+	} else {
+		$duplicateEdgesLabel = 		(uiRes("m_contextPolyToolsObjectMM.kOffsetEdgeLoop"));
+		$duplicateEdgesOptions =	(uiRes("m_contextPolyToolsObjectMM.kOffsetEdgeLoopOptions"));
+		$duplicateEdgesAnnotation =	(uiRes("m_contextPolyToolsObjectMM.kOffsetEdgeLoopAnnot"));
+	}
+
+	menuItem
+		-label $duplicateEdgesLabel
+		-annotation $duplicateEdgesAnnotation
+		-image "polyDuplicateEdgeLoop.png" 
+		-command "DuplicateEdges"
+		-dragMenuCommand "performPolyDuplicateEdge 2"
+		-dragDoubleClickCommand "DuplicateEdgesOptions"
+		//-radialPosition "SE" 
+		;
+
+	menuItem -optionBox true
+		-annotation $duplicateEdgesOptions
+		-image "polyDuplicateEdgeLoop.png" 
+		-command "DuplicateEdgesOptions"
+		;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSmooth"))
+				-command "SmoothPolygon" 
+				-enableCommandRepeat 1
+				-image "polySmooth.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSmoothOptions"))
+				-command "performPolySmooth 1" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSubdivProxy"))
+				-command "SmoothProxy" 
+				-enableCommandRepeat 1
+				-image "polySmoothProxy.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSubdivProxyOptions"))
+				-command "performSmoothProxy 1" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kCreaseTool"))
+				-command "PolyCreaseTool" 
+				-enableCommandRepeat 1
+				-image "polyCrease.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kCreaseToolOptions"))
+				-command "PolyCreaseToolOptions" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				-image "polyCrease.png" 
+				;
+
+			menuItem
+				-divider 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kProjectCurveOnMesh"))
+				-annotation (getRunTimeCommandAnnotation("ProjectCurveOnMesh"))
+				-command "ProjectCurveOnMesh"
+				-image "projectCurve_Poly.png"
+				;
+
+			menuItem -optionBox true
+				-annotation (getRunTimeCommandAnnotation("ProjectCurveOnMeshOptions"))
+				-command "ProjectCurveOnMeshOptions";
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSplitMeshWithProjectedCurve"))
+				-annotation (getRunTimeCommandAnnotation("SplitMeshWithProjectedCurve"))
+				-command "SplitMeshWithProjectedCurve"
+				-image "projectCurveSplit_Poly.png"
+				;
+
+			menuItem -optionBox true
+				-annotation (getRunTimeCommandAnnotation("SplitMeshWithProjectedCurveOptions"))
+				-command "SplitMeshWithProjectedCurveOptions";
+
+			menuItem
+				-divider 1
+				;
+
+			menuItem
+				-annotation (getRunTimeCommandAnnotation("MirrorPolygonGeometry"))
+				-label (uiRes("m_contextPolyToolsObjectMM.kMirrorPolygon"))
+				-version "2017"
+				-command    ("MirrorPolygonGeometry")
+				-image "polyMirrorGeometry.png" 
+				;
+
+			menuItem -optionBox true
+				-annotation (getRunTimeCommandAnnotation("MirrorPolygonGeometryOptions"))
+				-command "MirrorPolygonGeometryOptions" 
+				;
+
+			//	mapping menu is common to more than objects
+			//	
+			contextPolyToolsMappingMM;
+
+			setParent -menu ..;
+
+			menuItem
+				-divider 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kTriangulate"))
+				-command "Triangulate" 
+				-enableCommandRepeat 1
+				-image "polyTriangulate.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kQuadrangulate"))
+				-command "Quadrangulate" 
+				-enableCommandRepeat 1
+				-image "polyQuad.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kQuadrangulateOptions"))
+				-command "performPolyQuadrangulate 1" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+
+			menuItem
+				-divider 1
+				;
+
+		if( `pluginInfo -q -loaded meshReorder` )
+		{
+			menuItem
+				-version 2017
+				-label (uiRes("m_contextPolyToolsObjectMM.kTransferVertexOrder"))
+				-annotation (getRunTimeCommandAnnotation("TransferVertexOrder"))
+				-command "TransferVertexOrder"
+				-enableCommandRepeat 1
+				-image "transferIDs.png"
+				;
+
+			menuItem
+				-divider 1
+				;
+		}
+		
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kSeparate"))
+				-command "SeparatePolygon" 
+				-enableCommandRepeat 1
+				-image "polySeparate.png" 
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kCombine"))
+				-command "CombinePolygons" 
+				-enableCommandRepeat 1
+				-image "polyUnite.png" 
+				;
+
+			menuItem -optionBox true
+				-annotation (getRunTimeCommandAnnotation("CombinePolygonsOptions"))
+				-image "polyUnite.png" 
+				-command "CombinePolygonsOptions"
+				;
+
+			menuItem
+				-version "2014"
+				-label (uiRes("m_contextPolyToolsObjectMM.kBooleans"))
+				-subMenu 1
+				-tearOff 0
+				-allowOptionBoxes 1
+				-postMenuCommandOnce 0
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kUnion"))
+				-command "PolygonBooleanUnion" 
+				-enableCommandRepeat 1
+				-image "polyBooleansUnion.png" 
+				;
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kUnionOps"))
+				-command "PolygonBooleanUnionOptions" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kDifference"))
+				-command "PolygonBooleanDifference" 
+				-enableCommandRepeat 1
+				-image "polyBooleansDifference.png" 
+				;
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kDifferenceOps"))
+				-command "PolygonBooleanDifferenceOptions" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kIntersection"))
+				-command "PolygonBooleanIntersection" 
+				-enableCommandRepeat 1
+				-image "polyBooleansIntersection.png" 
+				;
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kIntersectionOps"))
+				-command "PolygonBooleanIntersectionOptions" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+
+			setParent -m ..;
+
+
+			menuItem
+				-divider 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kReduce"))
+				-command "ReducePolygon" 
+				-enableCommandRepeat 1
+				-image "polyReduce.png" 
+				;
+				
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kReduceOptions"))
+				-command "performPolyReduce 1" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				;
+				
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kCleanup"))
+				-command "CleanupPolygonOptions" 
+				-enableCommandRepeat 1
+				-image "polyCleanup.png" 
+				;
+
+			menuItem
+				-version 2015
+				-label (uiRes("m_contextPolyToolsObjectMM.kMTKConnectTool"))
+				-annotation (uiRes("m_contextPolyToolsObjectMM.kMTKConnectToolAnn"))
+				-command "dR_connectTool" 
+				-enable $mtkEnable
+				-image "connect_NEX32.png"
+				MTKConnectToolMM;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kConnectToolOptions"))
+				-command "dR_connectTool; toolPropertyWindow;" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				-enable $mtkEnable
+				;
+
+
+			menuItem
+				-version 2015
+				-label (uiRes("m_contextPolyToolsObjectMM.kMTKQuadDrawTool"))
+				-annotation (uiRes("m_contextPolyToolsObjectMM.kMTKQuadDrawToolAnn"))
+				-command "dR_quadDrawTool" 
+				-enable $mtkEnable
+				-image "quadDraw_NEX32.png"
+				MTKQuadDrawToolMM;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kQuadDrawToolOptions"))
+				-command "dR_quadDrawTool; toolPropertyWindow;" 
+				-optionBox 1
+				-enableCommandRepeat 1
+				-enable $mtkEnable
+				;
+
+			//setParent -m ..;
+
+			menuItem
+				-divider 1
+				;
+
+			menuItem
+				-label (uiRes("m_contextPolyToolsObjectMM.kPolygonDisplay"))
+				-subMenu 1
+				-allowOptionBoxes 1
+				;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleBackfaceCulling"))
+					-command "int $cond[1]=`polyOptions -q -fb`; if ($cond[0]) polyOptions -bc; else polyOptions -fb;" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				menuItem
+					-divider 1
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleBorderEdges"))
+					-command "polyOptions -dmb 0 ;polyOptions  -r -db  on" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleTextureBorderEdges"))
+					-command "polyOptions -db 0 ;polyOptions -r -dmb 1" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				menuItem
+					-divider 1
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleFaceNormals"))
+					-command "polyOptions -r -f -dn on" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleVertexNormals"))
+					-command "polyOptions -r -pt -dn on" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				menuItem
+					-divider 1
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleFaceCenters"))
+					-command "TogglePolygonFaceCenters" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png" 
+					-echoCommand 0
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleHiddenTriangles"))
+					-command "polyOptions -r -dt 1" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kToggleVertices"))
+					-command "polyOptions -r -displayVertex 1" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png" 
+					-echoCommand 0
+					;
+
+				menuItem
+					-divider 1
+					;
+
+				menuItem
+					-label (uiRes("m_contextPolyToolsObjectMM.kResetPolygonDisplay"))
+					-command "polyOptions -activeObjects -ae  -sb 3  -db 0  -dmb 0  -dv 0  -dn 0 -facet  -dc 0  -dt 0  -dw 0  -din 0 0 0 0  -sn 0.4 -bc  -duv 0  -uvt 0  -cs 0  -cm diffuse  -bcv 1" 
+					-enableCommandRepeat 1
+					-image "menuIconDisplay.png"
+					-echoCommand 0
+					;
+
+				
+					
+			setParent -menu ..;
+			
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kSendToPainter"))
+		-command "mayaToPainter" 
+		-enableCommandRepeat 1
+		-image "mayaToPainter.png" 
+		;
+					
+	menuItem
+		-label (uiRes("m_contextPolyToolsObjectMM.kSendToPainterOptions"))
+		-command "mayaToPainterOptions" 
+		-optionBox 1
+		-enableCommandRepeat 1
+		;
+
+}
