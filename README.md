@@ -13,7 +13,7 @@ Otherwise, you can follow these steps:
 * Go to the `Content` folder.
 * Place the `mayaToPainter.py` file in `Documents/maya/plug-ins` folder. If that folder isn't there, create it.
 * If you want an item in the mesh context marking menu, also add the `scripts` folder to `Documents/maya` and add `prefs` to `Documents/maya/20##`.
-* Place the `maya-to-painter` folder in `Documents/Adobe/Adobe Substance 3D Painter/plugins`
+* Place the `maya-to-painter` folder in `Documents/Adobe/Adobe Substance 3D Painter/plugins`. See [this document](https://helpx.adobe.com/substance-3d-painter/scripting-and-development/scripts-and-plugins/creating-a-javascript-plugin.html) for more details on what path to use for platforms other than Windows.
 * In Maya, go to `Windows` → `Settings/Preferences` → `Plug-in Manager`
 * Check the *Loaded* and *Auto load* checkboxes for `mayaToPainter.py`
 * You should now have a new menu button under Maya's `Mesh` menu called `Send To Painter`. 
@@ -26,7 +26,7 @@ Otherwise, you can follow these steps:
 * Options for user set export path, Painter path and cleanup tools.
 * Optional addition: new item in context sensitive marking menu.
 * For full functionality, install the Substance Painter part of the plugin.
-    - Add the `maya-to-painter` folder to `Documents/Adobe/Adobe Substance 3D Painter/plugins`
+    - Add the `maya-to-painter` folder to `Documents/Adobe/Adobe Substance 3D Painter/plugins`, see the *Installation* section above
     - Doing this will allow Painter to automatically add a highpoly you export using this plugin to the baking parameters.
 
 ## How to use
@@ -40,7 +40,7 @@ Otherwise, you can follow these steps:
 * Exactly two objects selected, with "_low" AND "_high" in the end of their name:
     - Plugin will export **two** meshes, assuming you want to bake your lowpoly in Painter. If you have the Painter plugin installed, the highpoly will automatically be added to your baking parameters. **Important note**: you can also use groups here, so you can still use this when baking by mesh name.
 * If you've already exported a mesh:
-    - The plugin checks if there is a process called `Substance Painter.exe` running, and if there already is an object with the same export name in the export path. If both are true, it will update the mesh(es) instead of starting a new instance of Painter. To update your mesh in Painter, go to `Edit` → `Project Configuration` → `Select`. In the prompt, just press `Open` immediately, you don't need to select the mesh. Then press "OK".
+    - The plugin checks if there is a Substance Painter process running, and if there already is an object with the same export name in the export path. If both are true, it will update the mesh(es) instead of starting a new instance of Painter. To update your mesh in Painter, go to `Edit` → `Project Configuration` → `Select`. In the prompt, just press `Open` immediately, you don't need to select the mesh. Then press "OK".
     Highpoly meshes will auto-update, so all you need to do is press bake again.
 
 ### Intended use
