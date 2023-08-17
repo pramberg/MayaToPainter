@@ -1,7 +1,5 @@
 # Maya To Painter
-A plugin that vastly improves the experience of using Maya and Substance Painter together. It has features for easily working with high- and lowpoly meshes, making the process of baking much faster. It detects whether Painter is running, and updates the mesh instead of starting a new instance of Painter if the mesh already exists. 
-Check out the option-box for cleaning up the temp-folder, and changing directories.
-Currently, it doesn't have support for UDIMs, but if there is demand, it can be added.
+A plugin that vastly improves the experience of using Maya and Substance Painter together. It has features for easily working with high- and lowpoly meshes, making the process of baking much faster. It detects whether Painter is running, and updates the mesh instead of starting a new instance of Painter if the mesh already exists.
 
 ## Download
 Navigate to [the latest release](https://github.com/pramberg/MayaToPainter/releases/latest) and download the `Source Code (zip)`. Unzip it, and follow the installation below.
