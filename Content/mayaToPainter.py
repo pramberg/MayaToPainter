@@ -530,7 +530,7 @@ def updateAutoBake():
 # have moved their Documents folder.
 # Haven't tested if this solution works for that case.
 def getPathToPainterPlugin():
-    path = '~/Allegorithmic/Substance Painter/plugins/maya-to-painter/'
+    path = '~/Adobe/Adobe Substance 3D Painter/plugins/maya-to-painter/'
     return os.path.expanduser(path)
 
 
