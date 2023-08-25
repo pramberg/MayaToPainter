@@ -538,10 +538,14 @@ def getPathToPainterPlugin():
 # current value in the options.
 def updateAutoBakeJSON():
     pathToPainterPlugin = getPathToPainterPlugin()
-    with open(pathToPainterPlugin + 'shouldBake.json', 'r') as shouldBakeJSON:
+    pathToShouldBake = pathToPainterPlugin + 'shouldBake.json'
+    if not os.path.exists(pathToShouldBake):
+        return
+
+    with open(pathToShouldBake, 'r') as shouldBakeJSON:
         obj = json.loads(shouldBakeJSON.read())
         obj['shouldBake'] = pm.optionVar["mayaToPainterShouldBake"]
-    with open(pathToPainterPlugin + 'shouldBake.json', 'w') as shouldBakeJSON:
+    with open(pathToShouldBake, 'w') as shouldBakeJSON:
         json.dump(obj, shouldBakeJSON)
 
 
