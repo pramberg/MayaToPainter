@@ -1,6 +1,9 @@
 # Maya To Painter
 A plugin that vastly improves the experience of using Maya and Substance Painter together. It has features for easily working with high- and lowpoly meshes, making the process of baking much faster. It detects whether Painter is running, and updates the mesh instead of starting a new instance of Painter if the mesh already exists.
 
+> [!CAUTION]
+> This plugin was written a long time ago, and I don't consider any of it to be of particularly good quality. But since I no longer have access to Maya or any recent version of Substance Painter, I can't verify any changes made to this plugin. That's why the code is mostly as it was back then, with a few fixes here and there to keep it alive. With that said, if there is anyone out there with access to these programs who wish to continue this project, I welcome any support.
+
 ## Download
 Navigate to [the latest release](https://github.com/pramberg/MayaToPainter/releases/latest) and download the `Source Code (zip)`. Unzip it, and follow the installation below.
 
@@ -61,6 +64,3 @@ You can choose four different options:
 
 ## Known bugs
 * You can't exit Maya properly if an instance of Painter is running that was started from this plugin.
-
-## Disclaimer
-This plugin was written a long time ago, and I don't consider any of it to be of particularly good quality. But since I no longer have access to Maya or any recent version of Substance Painter, I can't verify any changes made to this plugin. That's why the code is mostly as it was back then, with a few fixes here and there to keep it alive. With that said, if there is anyone out there with access to these programs who wish to continue this project, I welcome any support.
